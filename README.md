@@ -33,17 +33,29 @@ Proyek ini dikembangkan melalui tahapan-tahapan berikut:
 
 ## Struktur Proyek
 Sistem-Deteksi-BISINDO-Realtime/
+
 ├── realtime_detector_bisindo.py # Script utama untuk sistem deteksi real-time
+
 ├── extract_landmarks.py         # Script untuk ekstraksi landmark dari dataset
+
 ├── train_landmark_classifier.py # Script untuk melatih model MLP
+
 ├── data/                        # Folder untuk dataset gambar mentah BISINDO
+
 │   └── alphabet/                # Subfolder contoh: a, b, c, ...
+
 │       └── ...
+
 ├── data/bisindo_landmarks.csv   # Hasil ekstraksi landmark (seringkali besar, bisa diabaikan di .gitignore)
+
 ├── dictionary/
+
 │   └── class_names_landmark.txt # File berisi nama-nama kelas huruf
+
 └── models/
+
 └── bisindo_landmark_classifier.h5 # Model MLP yang sudah terlatih
+
 
 ## Cara Menjalankan
 ### Prasyarat:
