@@ -75,5 +75,5 @@ Sistem-Deteksi-BISINDO-Realtime/
 
 ## Kontributor
 Nurohman
-**Tugas UAS Machine Learning Lanjutan - Universitas Krisnadwipayana / MAchine Learning**
+**Tugas UAS Machine Learning Lanjutan - Universitas Krisnadwipayana / Machine Learning**
 
