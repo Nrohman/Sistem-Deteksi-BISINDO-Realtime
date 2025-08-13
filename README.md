@@ -71,33 +71,64 @@ DeteksiHuruf/
 
 └── venv_apd/                       # Folder untuk virtual environment Python
 
+*(Catatan data: data alfabet A-Z dapat diunduh sesuai keterangan pada readme_data.txt )*
+*(Catatan: Folder `audio/` dan `no/` ditambahkan sesuai gambar struktur direktori yang diberikan. Sesuaikan jika penggunaannya berbeda.)*
 
 ## Cara Menjalankan
-### Prasyarat:
-1.  **Kloning repositori ini:**
-    ```bash
-    git clone [https://github.com/NamaPenggunaAnda/Sistem-Deteksi-BISINDO-Realtime.git](https://github.com/NamaPenggunaAnda/Sistem-Deteksi-BISINDO-Realtime.git)
-    cd Sistem-Deteksi-BISINDO-Realtime
-    ```
-2.  **Instal dependensi:**
-    ```bash
-    pip install opencv-python mediapipe tensorflow gtts playsound pandas # playsound untuk lokal
-    ```
-    *Catatan: Jika Anda berencana melatih ulang model, Anda mungkin memerlukan dataset gambar BISINDO yang lebih besar di folder `data/alphabet/`.*
 
-### Eksekusi:
-1.  **Ekstraksi Landmark (jika Anda memiliki dataset gambar baru atau ingin melatih ulang):**
-    ```bash
-    python extract_landmarks.py
-    ```
-2.  **Pelatihan Model (jika Anda ingin melatih ulang model):**
-    ```bash
-    python train_landmark_classifier.py
-    ```
-3.  **Jalankan Sistem Deteksi Real-time:**
-    ```bash
-    python realtime_detector_bisindo.py
-    ```
+### Prasyarat:
+
+Kloning repositori Anda:
+```Buka terminal atau Git Bash, lalu ketik perintah ini. Pastikan Anda mengganti NamaPenggunaAnda dengan username GitHub Anda.```
+
+Bash
+```
+git clone https://github.com/Nrohman/Sistem-Deteksi-BISINDO-Realtime.git
+cd Sistem-Deteksi-BISINDO-Realtime
+```
+Buat dan aktifkan virtual environment (sangat direkomendasikan):
+Ini akan membantu mengelola dependensi proyek Anda secara terisolasi.
+
+
+Bash
+```
+python -m venv venv_apd
+# Untuk Windows:
+.\venv_apd\Scripts\activate
+# Untuk macOS/Linux:
+source venv_apd/bin/activate
+```
+Instal semua dependensi:
+Pastikan Anda memiliki koneksi internet aktif saat menjalankan perintah ini karena akan mengunduh semua library yang diperlukan.
+
+
+Bash
+```
+pip install pandas tqdm opencv-python mediapipe scikit-learn tensorflow seaborn gtts pygame
+(Catatan: Jika Anda berencana melatih ulang model atau menggunakan fitur yang memerlukan dataset, Anda mungkin memerlukan dataset gambar BISINDO yang lebih besar di folder data/alphabet/.)
+```
+Eksekusi Proyek:
+Setelah prasyarat terpenuhi, Anda dapat menjalankan script proyek Anda sesuai tahapan yang Anda sebutkan:
+Ekstraksi Landmark (jika Anda memiliki dataset gambar baru atau ingin melatih ulang):
+
+Bash
+```
+python extract_landmarks.py
+```
+Pelatihan Model (jika Anda ingin melatih ulang model):
+Bash
+```
+python train_landmark_classifier.py
+```
+Jalankan Sistem Deteksi Real-time:
+Ini adalah script utama yang akan memulai deteksi BISINDO secara real-time menggunakan webcam Anda.
+
+Bash
+```
+python realtime_detector_bisindo.py
+```
+Pastikan Anda menjalankan perintah ini di terminal yang sama di mana virtual environment venv_apd Anda sudah aktif.
+
 
 ## Kontributor
 Nurohman
