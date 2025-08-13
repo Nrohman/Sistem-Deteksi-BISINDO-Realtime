@@ -32,29 +32,37 @@ Proyek ini dikembangkan melalui tahapan-tahapan berikut:
 * `pandas` (mungkin diperlukan untuk pra-pemrosesan data)
 
 ## Struktur Proyek
-Sistem-Deteksi-BISINDO-Realtime/
+DeteksiHuruf/
 
-├── realtime_detector_bisindo.py # Script utama untuk sistem deteksi real-time
+├── audio/                          # Folder untuk file audio (jika ada, misal hasil gTTS sementara)
 
-├── extract_landmarks.py         # Script untuk ekstraksi landmark dari dataset
+├── data/
 
-├── train_landmark_classifier.py # Script untuk melatih model MLP
+│   ├── alfabet/                    # Subfolder untuk dataset gambar per huruf (A, B, C, ...)
 
-├── data/                        # Folder untuk dataset gambar mentah BISINDO
+│   │   ├── A/
 
-│   └── alphabet/                # Subfolder contoh: a, b, c, ...
+│   │   ├── B/
 
-│       └── ...
+│   │   └── ...
 
-├── data/bisindo_landmarks.csv   # Hasil ekstraksi landmark (seringkali besar, bisa diabaikan di .gitignore)
+│   └── bisindo_landmarks.csv       # File CSV hasil ekstraksi landmark dari dataset
 
 ├── dictionary/
 
-│   └── class_names_landmark.txt # File berisi nama-nama kelas huruf
+│   └── class_names_landmark.txt    # File berisi nama-nama kelas huruf yang dideteksi
 
-└── models/
+├── models/
 
-└── bisindo_landmark_classifier.h5 # Model MLP yang sudah terlatih
+│   └── bisindo_landmark_classifier.h5 # Model MLP yang sudah terlatih
+
+├── extract_landmarks.py            # Script untuk ekstraksi landmark dari dataset gambar
+
+├── realtime_detector_bisindo.py    # Script utama untuk sistem deteksi real-time
+
+├── train_landmark_classifier.py    # Script untuk melatih model MLP
+
+└── venv_apd/                       # Folder untuk virtual environment Python
 
 
 ## Cara Menjalankan
