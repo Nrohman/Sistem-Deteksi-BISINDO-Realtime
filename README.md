@@ -45,7 +45,6 @@ Sistem-Deteksi-BISINDO-Realtime/
 └── models/
 └── bisindo_landmark_classifier.h5 # Model MLP yang sudah terlatih
 
-
 ## Cara Menjalankan
 ### Prasyarat:
 1.  **Kloning repositori ini:**
