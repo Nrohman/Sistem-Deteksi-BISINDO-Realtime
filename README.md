@@ -71,7 +71,7 @@ DeteksiHuruf/
 
 └── venv_apd/                       # Folder untuk virtual environment Python
 
-*(Catatan data: data alfabet A-Z dapat diunduh sesuai keterangan pada readme_data.txt )*
+*(Catatan data: data pada Folder alfabet A-Z dapat diunduh sesuai keterangan pada readme_dataset.txt)*
 *(Catatan: Folder `audio/` dan `no/` ditambahkan sesuai gambar struktur direktori yang diberikan. Sesuaikan jika penggunaannya berbeda.)*
 
 ## Cara Menjalankan
