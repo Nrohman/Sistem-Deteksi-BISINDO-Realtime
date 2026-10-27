@@ -1,136 +1,156 @@
-# Sistem Deteksi BISINDO Realtime
-Sistem deteksi huruf Bahasa Isyarat Indonesia (BISINDO) real-time menggunakan MediaPipe dan Multi-Layer Perceptron (MLP) untuk konversi isyarat tangan ke teks dan suara
+# Sistem Deteksi Bahasa Isyarat Indonesia (BISINDO) Realtime
 
-# Sistem Deteksi Bahasa Isyarat Indonesia (BISINDO) Real-time
-Proyek ini mengimplementasikan sistem deteksi huruf Bahasa Isyarat Indonesia (BISINDO) secara real-time menggunakan kombinasi Computer Vision (MediaPipe Hands) dan Machine Learning (Multi-Layer Perceptron/MLP). Tujuannya adalah untuk mengkonversi isyarat tangan BISINDO menjadi teks dan suara, memfasilitasi komunikasi yang lebih inklusif.
+Sistem penerjemah huruf **Bahasa Isyarat Indonesia (BISINDO)** secara *real-time* berbasis Computer Vision dan Machine Learning. Proyek ini mendeteksi gestur tangan melalui webcam menggunakan **MediaPipe Tasks Hand Landmarker**, mengklasifikasikannya dengan model **Neural Network (MLP)** berakurasi **98.76%**, merangkai huruf menjadi kata dengan **Auto-Correct Typo Bahasa Indonesia**, dan menyuarakannya secara otomatis melalui **Text-to-Speech (gTTS)**.
 
+---
 
-## Fitur Utama
-* **Deteksi Tangan dan Ekstraksi Landmark Real-time:** Memanfaatkan MediaPipe Hands untuk secara akurat mendeteksi tangan dan mengekstrak 21 landmark 3D dari setiap tangan.
-* **Klasifikasi Huruf BISINDO:** Menggunakan model Multi-Layer Perceptron (MLP) yang terlatih untuk mengklasifikasikan pola landmark tangan menjadi huruf-huruf alfabet BISINDO.
-* **Pembentukan Kata:** Mengakumulasikan huruf-huruf yang diprediksi untuk membentuk kata, dengan logika deteksi spasi berdasarkan jeda waktu isyarat.
-* **Konversi Teks ke Suara (Text-to-Speech):** Mengintegrasikan modul konversi teks ke suara (gTTS) untuk mengubah kata-kata yang terbentuk menjadi output suara yang jelas.
-* **Pemutaran Audio:** Menggunakan Pygame (atau modul lain seperti Playsound di lingkungan lokal) untuk memutar output suara, memungkinkan komunikasi dua arah.
-* **Tampilan Visual Real-time:** Menampilkan *feed* kamera dengan visualisasi deteksi tangan, prediksi huruf, dan teks yang terbentuk secara langsung.
+## 🌟 Fitur Utama
 
+- **Deteksi Tangan & Landmark Real-time (MediaPipe Tasks API):** Menggunakan MediaPipe Tasks API terbaru yang kompatibel dengan Python modern (hingga Python 3.13), mendeteksi hingga 2 tangan dan mengekstrak 42 titik landmark 3D (126 fitur koordinat).
+- **Klasifikasi Akurasi Tinggi (98.76% Akurasi Validasi):** Model Neural Network Multi-Layer Perceptron (MLP) yang dilatih menggunakan dataset bersih dengan normalisasi `StandardScaler`.
+- **Spatial Alignment (Solusi Bug Mirror Kamera):** Penataan posisi tangan berbasis koordinat horizontal layar (Screen-X), memastikan gestur dua tangan (seperti huruf **A** dan **K**) tidak tertukar dengan huruf lain saat kamera di-mirror.
+- **Motion Velocity Filter (Anti-Spam Gerakan Cepat):** Menghitung perpindahan landmark antar-frame; gerakan cepat atau membolak-balik tangan otomatis berstatus `Bergerak (Transisi)` dan tidak akan memicu huruf acak.
+- **Temporal Debounce & Stabilization Bar:** Gestur harus ditahan stabil selama ~0.2 detik untuk dikonfirmasi. Terdapat indikator *progress bar* visual di layar.
+- **Penyusunan Kata & Kalimat Alami:** Kata aktif tidak akan dihapus selama tangan masih berada di depan kamera. Kata diselesaikan saat tangan diturunkan selama 2 detik atau dengan menekan tombol `[Space]`.
+- **Auto-Correct Typo Bahasa Indonesia Cerdas:** Otomatis memperbaiki huruf selip atau huruf ganda akibat menahan gestur (misalnya `BISNIDO` $\rightarrow$ `BISINDO`, `TRIMA` $\rightarrow$ `TERIMA`, `KASIHH` $\rightarrow$ `KASIH`) berbasis kamus kata bahasa Indonesia.
+- **Text-to-Speech (gTTS) & Audio Player:** Kata yang telah selesai disusun otomatis diucapkan dengan intonasi bahasa Indonesia yang jelas menggunakan Google Text-to-Speech (gTTS) dan Pygame.
+- **Head-Up Display (HUD) Interaktif:** Layar kamera menampilkan status deteksi huruf, persentase keyakinan, indikator kestabilan, kata aktif yang sedang dirangkai, riwayat kalimat, serta petunjuk gestur.
 
-## Tahapan Pengembangan
-Proyek ini dikembangkan melalui tahapan-tahapan berikut:
-1.  **Pengumpulan Data:** Memanfaatkan dataset gambar huruf BISINDO.
-2.  **Pra-pemrosesan Data & Ekstraksi Fitur Landmark:** Gambar diproses oleh MediaPipe Hands untuk mengekstrak 126 fitur landmark per isyarat, yang disimpan dalam format CSV.
-3.  **Pelatihan Model Multi-Layer Perceptron (MLP):** Data landmark dilatih menggunakan model MLP. Model terlatih (`.h5`) dan nama-nama kelas disimpan untuk digunakan dalam deteksi real-time.
-4.  **Implementasi Sistem Real-time:** Aplikasi membaca input dari webcam, mengekstrak landmark, memprediksi huruf dengan model MLP, dan menampilkan hasilnya.
-5.  **Integrasi Konversi Teks dan Suara:** Teks prediksi diakumulasikan menjadi kata, deteksi spasi dilakukan berdasarkan jeda waktu, dan kata dikonversi menjadi suara yang kemudian diputar.
-6.  **Pengujian dan Evaluasi:** Evaluasi kinerja sistem secara keseluruhan, termasuk akurasi deteksi huruf, pembentukan kata, dan respons suara.
+---
 
+## 📊 Performa Model (v4 Clean)
 
-## Teknologi yang Digunakan
-* **Python:** Versi 3.10.10
-* **pandas:** Untuk manipulasi dan analisis data (khususnya untuk file CSV landmark).
-* **tqdm:** Untuk menampilkan progress bar saat memproses data atau melatih model.
-* **opencv-python (OpenCV):** Untuk pemrosesan gambar dan tampilan video.
-* **mediapipe:** Untuk deteksi tangan dan ekstraksi landmark.
-* **scikit-learn:** Untuk tugas-tugas Machine Learning seperti pra-pemrosesan data, pembagian dataset, atau evaluasi metrik (jika digunakan).
-* **tensorflow:** Untuk membangun dan melatih model Multi-Layer Perceptron (MLP).
-* **seaborn:** Untuk visualisasi data, misalnya untuk menampilkan confusion matrix atau grafik kinerja model.
-* **gtts (Google Text-to-Speech):** Untuk konversi teks ke suara.
-* **pygame:** Untuk pemutaran audio.
+Model dilatih ulang menggunakan dataset bersih setelah membuang 1.917 data baris kosong yang merusak model sebelumnya:
 
-## Struktur Proyek
-DeteksiHuruf/
+| Metrik Evaluasi | Model Asli (Sebelumnya) | Model v4 Clean (Sekarang) |
+| :--- | :---: | :---: |
+| **Akurasi Validasi** | ~75.9% | **98.76%** |
+| **Validation Loss** | > 1.20 | **0.0668** |
+| **Presisi Huruf A** | 16.0% (Sering tertukar Y) | **97.6% (100% Recall)** |
+| **Presisi Huruf K** | ~79.0% (Tertukar P) | **100.0%** |
+| **Presisi Huruf Y** | ~26.0% | **100.0%** |
 
-├── audio/                          # Folder untuk file audio (jika ada, misal hasil gTTS sementara)
+Grafik kurva pelatihan dan matriks kebingungan (*confusion matrix*) lengkap tersimpan di folder [`results/`](results/).
 
+---
+
+## 🛠️ Teknologi yang Digunakan
+
+- **Bahasa:** Python 3.10 - 3.13
+- **Computer Vision:** OpenCV (`opencv-python`), Google MediaPipe (`mediapipe >= 1.0` Tasks API)
+- **Deep Learning / ML:** TensorFlow 2.x / Keras, Scikit-learn
+- **Audio & TTS:** `gTTS` (Google Text-to-Speech), `pygame`
+- **Manipulasi Data & Visualisasi:** `pandas`, `numpy`, `matplotlib`, `seaborn`
+
+---
+
+## 📁 Struktur Direktori
+
+```text
+Sistem-Deteksi-BISINDO-Realtime/
 ├── data/
-
-│   ├── alfabet/                    # Subfolder untuk dataset gambar per huruf (A, B, C, ...)
-
-│   │   ├── A/
-
-│   │   ├── B/
-
-│   │   └── ...
-
-│   └── bisindo_landmarks.csv       # File CSV hasil ekstraksi landmark dari dataset
-
+│   ├── bisindo_Landmarks.csv          # Dataset koordinat landmark A-Z
+│   └── readme_dataset.txt             # Sumber dataset Kaggle (Agung Ma'ruf)
 ├── dictionary/
-
-│   └── class_names_landmark.txt    # File berisi nama-nama kelas huruf yang dideteksi
-
+│   ├── class_names_landmark.txt       # Daftar label kelas alfabet (A-Z)
+│   └── indonesian_dictionary.txt      # Kamus kata bahasa Indonesia untuk Auto-Correct
 ├── models/
-
-│   └── bisindo_landmark_classifier.h5 # Model MLP yang sudah terlatih
-
+│   ├── bisindo_landmark_classifier.h5 # Model utama terlatih (98.76% akurasi)
+│   ├── bisindo_landmark_classifier_ORIGINAL.h5 # Cadangan model asli versi awal
+│   ├── landmark_scaler.pkl            # Objek StandardScaler untuk normalisasi fitur
+│   └── hand_landmarker.task           # Model MediaPipe Tasks (didownload otomatis)
+├── results/
+│   ├── classification_report_clean.txt # Laporan metrik presisi/recall tiap kelas
+│   ├── confusion_matrix_clean.png     # Visualisasi Confusion Matrix
+│   └── training_history_clean.png     # Grafik akurasi & loss selama pelatihan
 ├── scripts/
-
-│   └── extract_landmarks.py            # Script untuk ekstraksi landmark dari dataset gambar
-
-│   └── realtime_detector_bisindo.py    # Script utama untuk sistem deteksi real-time
-
-│   └── train_landmark_classifier.py    # Script untuk melatih model MLP
-
-└── venv_apd/                       # Folder untuk virtual environment Python
-
-*(Catatan data: data pada Folder alfabet A-Z dapat diunduh sesuai keterangan pada readme_dataset.txt)*
-*(Catatan: Folder `audio/` dan `no/` ditambahkan sesuai gambar struktur direktori yang diberikan. Sesuaikan jika penggunaannya berbeda.)*
-
-## Cara Menjalankan
-
-### Prasyarat:
-
-Kloning repositori Anda:
-```Buka terminal atau Git Bash, lalu ketik perintah ini. Pastikan Anda mengganti NamaPenggunaAnda dengan username GitHub Anda.```
-
-Bash
+│   ├── realtime_detector_mediapipe.py # Script utama deteksi webcam real-time
+│   ├── autocorrect.py                 # Modul algoritma auto-correct typo
+│   ├── train_model_clean.py           # Script pelatihan model dataset bersih (v4)
+│   ├── diagnose_hands.py              # Script diagnosis & analisis koordinat landmark
+│   └── extract_landmarks.py           # Script ekstraksi landmark dari gambar dataset
+├── .gitignore
+├── README.md
+└── requirements.txt
 ```
+
+---
+
+## 🚀 Panduan Instalasi & Penggunaan
+
+### 1. Kloning Repositori
+```bash
 git clone https://github.com/Nrohman/Sistem-Deteksi-BISINDO-Realtime.git
 cd Sistem-Deteksi-BISINDO-Realtime
 ```
-Buat dan aktifkan virtual environment (sangat direkomendasikan):
-Ini akan membantu mengelola dependensi proyek Anda secara terisolasi.
 
-
-Bash
-```
+### 2. Buat & Aktifkan Virtual Environment
+```bash
+# Membuat virtual environment
 python -m venv venv_apd
-# Untuk Windows:
-.\venv_apd\Scripts\activate
-# Untuk macOS/Linux:
+
+# Aktivasi di Windows (PowerShell):
+.\venv_apd\Scripts\Activate.ps1
+
+# Aktivasi di Linux / macOS:
 source venv_apd/bin/activate
 ```
-Instal semua dependensi:
-Pastikan Anda memiliki koneksi internet aktif saat menjalankan perintah ini karena akan mengunduh semua library yang diperlukan.
 
+### 3. Instal Dependensi
+```bash
+pip install -r requirements.txt
+```
+*(Atau instal manual: `pip install tensorflow mediapipe opencv-python scikit-learn pandas gtts pygame seaborn matplotlib`)*
 
-Bash
-```
-pip install pandas tqdm opencv-python mediapipe scikit-learn tensorflow seaborn gtts pygame
-(Catatan: Jika Anda berencana melatih ulang model atau menggunakan fitur yang memerlukan dataset, Anda mungkin memerlukan dataset gambar BISINDO yang lebih besar di folder data/alphabet/.)
-```
-Eksekusi Proyek:
-Setelah prasyarat terpenuhi, Anda dapat menjalankan script proyek Anda sesuai tahapan yang Anda sebutkan:
-Ekstraksi Landmark (jika Anda memiliki dataset gambar baru atau ingin melatih ulang):
+---
 
-Bash
-```
-python extract_landmarks.py
-```
-Pelatihan Model (jika Anda ingin melatih ulang model):
-Bash
-```
-python train_landmark_classifier.py
-```
-Jalankan Sistem Deteksi Real-time:
-Ini adalah script utama yang akan memulai deteksi BISINDO secara real-time menggunakan webcam Anda.
+### 4. Menjalankan Deteksi Real-Time (Webcam)
 
-Bash
+Jalankan script utama:
+```bash
+python scripts/realtime_detector_mediapipe.py
 ```
-python realtime_detector_bisindo.py
+
+*Saat pertama kali dijalankan, sistem akan otomatis mengunduh file model `hand_landmarker.task` (~29 MB) dari server resmi Google MediaPipe jika belum tersedia.*
+
+---
+
+## 🎮 Kontrol & Petunjuk Penggunaan
+
+### Cara Mengetik Huruf & Kata:
+1. **Membentuk Huruf:** Tunjukkan gestur alfabet BISINDO di depan kamera dan tahan stabil selama ~0.2 detik hingga indikator bar hijau penuh.
+2. **Huruf Dua Tangan:** Di BISINDO, huruf **A, D, G, H, K, Q, S, T, W, X** wajib menggunakan **2 TANGAN**. Pastikan kedua tangan terlihat di kamera.
+3. **Penyusunan Kata:** Kata yang sedang dirangkai tidak akan hilang selama tangan Anda masih berada di kamera.
+4. **Menyelesaikan Kata & Membunyikan Suara:**
+   - **Otomatis:** Turunkan tangan dari pandangan kamera selama 2 detik.
+   - **Manual:** Tekan tombol **`[Space]`** di keyboard untuk langsung menyelesaikan kata saat itu juga.
+
+### Tombol Navigasi Keyboard:
+| Tombol | Fungsi |
+| :---: | :--- |
+| **`[Space]` / `[Enter]`** | Selesaikan kata saat ini, lakukan auto-correct, dan bunyikan suara (TTS) |
+| **`[Backspace]` / `'b'`** | Hapus 1 huruf terakhir dari kata yang sedang dirangkai |
+| **`'c'`** | Hapus (*clear*) seluruh huruf pada kata yang sedang dirangkai |
+| **`'r'`** | Reset total (*clear* kata aktif dan seluruh riwayat kalimat) |
+| **`'q'`** | Keluar dari aplikasi deteksi |
+
+---
+
+## 🔄 Melatih Ulang Model (Opsional)
+
+Jika Anda ingin melatih ulang model menggunakan dataset landmark:
+```bash
+python scripts/train_model_clean.py
 ```
-Pastikan Anda menjalankan perintah ini di terminal yang sama di mana virtual environment venv_apd Anda sudah aktif.
+Script ini akan:
+1. Membaca `data/bisindo_Landmarks.csv` dan membersihkan baris kosong (semua 0).
+2. Menerapkan `StandardScaler` dan menyimpan scaler ke `models/landmark_scaler.pkl`.
+3. Melatih MLP dengan arsitektur BatchNormalization & Dropout selama hingga 120 epoch.
+4. Menyimpan model terbaik ke `models/bisindo_landmark_classifier.h5`.
+5. Menghasilkan laporan evaluasi dan grafik ke folder `results/`.
 
+---
 
-## Kontributor
-Nurohman
-**Tugas UAS Machine Learning Lanjutan - Universitas Krisnadwipayana / Machine Learning**
-
+## 👥 Kontributor
+* **Nurohman**
+* Proyek Tugas UAS Machine Learning Lanjutan - Universitas Krisnadwipayana
