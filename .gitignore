@@ -3,11 +3,22 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .DS_Store
-venv/ # Atau nama folder environment virtual Anda
+venv/
+venv_apd/
 
-# Data & Models (yang bisa dihasilkan atau terlalu besar)
-data/bisindo_landmarks.csv # Hasil ekstraksi landmark bisa besar
-# models/bisindo_landmark_classifier.h5 # Uncomment jika model terlalu besar dan akan diunggah via Git LFS
+# Cache lokal
+.keras/
+.matplotlib/
+
+# Audio temp
+audio/*.mp3
+
+# MediaPipe model (didownload otomatis saat runtime)
+models/hand_landmarker.task
+
+# Model cadangan eksperimen
+models/bisindo_landmark_classifier_v2_backup.h5
+models/bisindo_landmark_classifier_v4_clean.h5
 
 # Log aktivitas
 activity_logs/
